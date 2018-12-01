@@ -1,0 +1,52 @@
+  static void Main(string[] args)
+        {
+            var api = new VkApi();
+
+            api.Authorize(new ApiAuthParams
+            {
+                ApplicationId = 6761754,
+                Login = "2633027@gmail.com",
+                Password = "Numberone11",
+                Settings = Settings.All
+            });
+            //Console.WriteLine(api.Token);
+            //var res = api.Groups.Get(new GroupsGetParams());
+
+            //Console.WriteLine(res.TotalCount);
+            try
+            {
+                var posts = api.Wall.Get(new WallGetParams()
+                {   
+                    OwnerId = -34215577,
+                    Filter = VkNet.Enums.SafetyEnums.WallFilter.All,
+                    Count = 6
+                });
+
+                for (int n = 0; n < 6; n++)
+                {
+                    
+                    string enterInfo = posts.WallPosts[n].Text;
+                    double enterLength = enterInfo.Length;
+                    IEnumerable<(char Key, double Freq)> CharFreq = enterInfo
+                                                    .GroupBy(ch => ch)
+                                                    .OrderBy(group => group.Count())
+                                                    .Select(group => (group.Key, ((double)group.Count()) / enterLength));
+
+
+                    foreach (var tulpe in CharFreq)
+                    {
+                        Console.WriteLine($"Символ { tulpe.Key} встречается с частотой {tulpe.Freq * 100}%");
+                        
+                    }
+                   
+
+                }
+                
+            }
+            catch
+            {
+                Console.WriteLine("ой-ой");
+                
+            }
+            
+            Console.ReadLine();
